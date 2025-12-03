@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜单词游戏</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="game-container">
+            <h1>猜单词游戏</h1>
+            
+            <!-- 游戏开始界面 -->
+            <div v-if="gameState === 'start'" class="start-screen">
+                <div class="input-group">
+                    <label for="maxAttempts">请输入最大猜测次数：</label>
+                    <input type="number" id="maxAttempts" v-model.number="maxAttempts" min="5" max="20" placeholder="5-20">
+                </div>
+                <button class="btn btn-primary" @click="startGame" :disabled="maxAttempts < 5 || maxAttempts > 20">开始游戏</button>
+            </div>
+            
+            <!-- 游戏进行界面 -->
+            <div v-else-if="gameState === 'playing'" class="game-screen">
+                <div class="word-display">
+                    <span v-for="(char, index) in displayedWord" :key="index" class="letter">
+                        {{ char }}
+                    </span>
+                </div>
+                
+                <div class="game-info">
+                    <p>剩余次数：{{ remainingAttempts }}</p>
+                    <p>已猜字母：{{ guessedLetters.join(', ') || '无' }}</p>
+                    <p>可用提示：{{ availableHints }}</p>
+                </div>
+                
+                <div class="input-group">
+                    <label for="guessInput">请输入一个字母：</label>
+                    <input type="text" id="guessInput" v-model="currentGuess" maxlength="1" @keyup.enter="makeGuess" placeholder="A-Z" ref="guessInput">
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" @click="makeGuess" :disabled="!currentGuess.trim()">猜字母</button>
+                    <button class="btn btn-secondary" @click="getHint" :disabled="availableHints <= 0 || remainingAttempts <= 0">获取提示</button>
+                </div>
+                
+                <div v-if="hints.length > 0" class="hints">
+                    <strong>提示：</strong>
+                    <ul>
+                        <li v-for="(hint, index) in hints" :key="index">{{ index + 1 }}. {{ hint }}</li>
+                    </ul>
+                </div>
+                
+                <div v-if="message" :class="['message', messageType]">
+                    {{ message }}
+                </div>
+            </div>
+            
+            <!-- 游戏结束界面 -->
+            <div v-else-if="gameState === 'ended'" class="end-screen">
+                <div class="result-box">
+                    <h2>{{ messageType === 'success' ? '恭喜你！' : '游戏结束！' }}</h2>
+                    <p>{{ message }}</p>
+                    <p>正确单词：<strong>{{ targetWord }}</strong></p>
+                    <p>猜对次数：{{ correctGuesses }}</p>
+                    <p>猜错次数：{{ incorrectGuesses }}</p>
+                </div>
+                <button class="btn btn-primary" @click="resetGame">再玩一次</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
