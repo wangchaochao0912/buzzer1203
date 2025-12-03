@@ -1,0 +1,430 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#app {
+    width: 100%;
+    max-width: 800px;
+}
+
+.game-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.game-title {
+    text-align: center;
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 游戏设置界面 */
+.setup-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.setup-form {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.setup-form label {
+    display: block;
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.setup-form input[type="number"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    transition: border-color 0.3s ease;
+}
+
+.setup-form input[type="number"]:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.setup-form button,
+.game-screen button,
+.game-over-screen button {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.setup-form button:hover,
+.game-screen button:hover,
+.game-over-screen button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+}
+
+.setup-form button:disabled,
+.game-screen button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 游戏主界面 */
+.game-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.info-item {
+    text-align: center;
+    padding: 10px 20px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 15px;
+    font-size: 1rem;
+}
+
+.info-item span:first-child {
+    color: #666;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.remaining-guesses,
+.hint-points,
+.answer-word,
+.used-guesses {
+    color: #667eea;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.word-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    min-height: 80px;
+}
+
+.letter-box {
+    width: 50px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    background: rgba(102, 126, 234, 0.1);
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.letter-box.filled {
+    background: rgba(102, 126, 234, 0.2);
+    transform: scale(1.1);
+}
+
+.hint-section {
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.hint-header {
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.hint-content {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.input-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.input-section input[type="text"] {
+    width: 70px;
+    height: 50px;
+    text-align: center;
+    font-size: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    text-transform: uppercase;
+}
+
+.input-section input[type="text"]:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.hint-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+}
+
+.hint-btn:hover {
+    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.6);
+}
+
+.guessed-letters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    min-height: 50px;
+}
+
+.section-title {
+    color: #666;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.guessed-letter {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #999;
+    background: rgba(221, 221, 221, 0.5);
+    border-radius: 8px;
+    text-transform: uppercase;
+}
+
+.message {
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.message.success {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4caf50;
+    border: 2px solid rgba(76, 175, 80, 0.5);
+}
+
+.message.error {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: 2px solid rgba(244, 67, 54, 0.5);
+}
+
+.message.info {
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+    border: 2px solid rgba(33, 150, 243, 0.5);
+}
+
+.give-up-btn {
+    display: block;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    box-shadow: 0 5px 15px rgba(238, 90, 36, 0.4);
+}
+
+.give-up-btn:hover {
+    box-shadow: 0 8px 20px rgba(238, 90, 36, 0.6);
+}
+
+/* 游戏结束界面 */
+.game-over-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.game-result {
+    text-align: center;
+    width: 100%;
+}
+
+.win-title {
+    color: #4caf50;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(76, 175, 80, 0.2);
+}
+
+.lose-title {
+    color: #f44336;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(244, 67, 54, 0.2);
+}
+
+.result-info {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.result-info p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.result-info p:last-child {
+    margin-bottom: 0;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.restart-btn {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.restart-btn:hover {
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+}
+
+.setup-btn {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+}
+
+.setup-btn:hover {
+    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.6);
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .game-container {
+        padding: 20px;
+    }
+
+    .game-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .game-info {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .info-item {
+        width: 100%;
+    }
+
+    .word-display {
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .letter-box {
+        width: 40px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .input-section {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .input-section input[type="text"] {
+        width: 60px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .win-title,
+    .lose-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .letter-box {
+        width: 35px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+
+    .game-container {
+        padding: 15px;
+    }
+
+    .game-title {
+        font-size: 1.8rem;
+    }
+}
