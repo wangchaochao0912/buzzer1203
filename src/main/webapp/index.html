@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜单词游戏</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="game-container">
+            <h1 class="game-title">猜单词游戏</h1>
+
+            <!-- 游戏设置界面 -->
+            <div v-if="!gameStarted" class="setup-screen">
+                <div class="setup-form">
+                    <label for="maxGuesses">请输入最大猜测次数：</label>
+                    <input 
+                        id="maxGuesses" 
+                        type="number" 
+                        v-model.number="maxGuesses" 
+                        min="1" 
+                        max="20" 
+                        placeholder="建议 8-12 次"
+                    >
+                    <button @click="startGame" :disabled="!maxGuesses || maxGuesses < 1">
+                        开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 游戏主界面 -->
+            <div v-else-if="!gameEnded" class="game-screen">
+                <!-- 游戏信息 -->
+                <div class="game-info">
+                    <div class="info-item">
+                        <span>剩余次数：</span>
+                        <span class="remaining-guesses">{{ remainingGuesses }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span>已用次数：</span>
+                        <span>{{ maxGuesses - remainingGuesses }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span>提示点数：</span>
+                        <span class="hint-points">{{ hintPoints }}</span>
+                    </div>
+                </div>
+
+                <!-- 单词显示区 -->
+                <div class="word-display">
+                    <span v-for="(letter, index) in displayedWord" :key="index" class="letter-box">
+                        {{ letter }}
+                    </span>
+                </div>
+
+                <!-- 提示信息区 -->
+                <div v-if="currentHint" class="hint-section">
+                    <div class="hint-header">💡 当前提示：</div>
+                    <div class="hint-content" v-html="currentHint.replace(/\\n/g, '<br>')"></div>
+                </div>
+
+                <!-- 输入区 -->
+                <div class="input-section">
+                    <input 
+                        type="text" 
+                        v-model="userInput" 
+                        maxlength="1" 
+                        placeholder="请输入一个字母" 
+                        @keyup.enter="makeGuess"
+                    >
+                    <button @click="makeGuess" :disabled="!userInput.trim()">
+                        猜测
+                    </button>
+                    <button v-if="hintPoints > 0" @click="useHint" class="hint-btn">
+                        使用提示 ({{ hintPoints }})
+                    </button>
+                </div>
+
+                <!-- 已猜字母区 -->
+                <div class="guessed-letters">
+                    <span class="section-title">已猜字母：</span>
+                    <span v-for="(letter, index) in guessedLetters" :key="index" class="guessed-letter">
+                        {{ letter }}
+                    </span>
+                </div>
+
+                <!-- 消息提示 -->
+                <div v-if="message" :class="['message', messageType]">
+                    {{ message }}
+                </div>
+
+                <!-- 放弃按钮 -->
+                <button @click="giveUp" class="give-up-btn">
+                    放弃游戏
+                </button>
+            </div>
+
+            <!-- 游戏结束界面 -->
+            <div v-else class="game-over-screen">
+                <div class="game-result">
+                    <h2 v-if="playerWon" class="win-title">🎉 恭喜你赢了！</h2>
+                    <h2 v-else class="lose-title">😢 很遗憾，你输了！</h2>
+                    
+                    <div class="result-info">
+                        <p>答案是：<span class="answer-word">{{ targetWord }}</span></p>
+                        <p>你用了 <span class="used-guesses">{{ maxGuesses - remainingGuesses }}</span> 次猜测</p>
+                        <p v-if="playerWon">剩余次数：<span class="remaining-guesses">{{ remainingGuesses }}</span></p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button @click="restartGame" class="restart-btn">
+                            再玩一次
+                        </button>
+                        <button @click="backToSetup" class="setup-btn">
+                            重新设置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./game.js"></script>
+</body>
+</html>
